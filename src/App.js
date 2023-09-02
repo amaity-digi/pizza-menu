@@ -2,66 +2,67 @@
 //import './App.css';
 import './index.css';
 
-function App() {
+const PizzaData = [
+  {
+    name: "Focaccia",
+    ingredients: "Breads with italian olive oil and rosemary",
+    price: 6,
+    photoName: "pizzas/spinaci.jpg",
+    soldOut: false
+  },
+  {
+    name: "Margherita",
+    ingredients: "Tomato sauce, mozzarella cheese, fresh basil",
+    price: 8,
+    photoName: "pizzas/Margherita.jpg",
+    soldOut: false
+  },
+  {
+    name: "Pepperoni",
+    ingredients: "Tomato sauce, mozzarella cheese, pepperoni slices",
+    price: 10,
+    photoName: "pizzas/pepperoni.jpg",
+    soldOut: false
+  },
+  {
+    name: "Hawaiian",
+    ingredients: "Tomato sauce, mozzarella cheese, ham, pineapple",
+    price: 9,
+    photoName: "pizzas/hawaiian.jpg",
+    soldOut: false
+  },
+  {
+    name: "Mushroom Delight",
+    ingredients: "Tomato sauce, mozzarella cheese, mushrooms, onions",
+    price: 8,
+    photoName: "pizzas/mushroom-delight.jpg",
+    soldOut: true
+  },
+  {
+    name: "Supreme",
+    ingredients: "Tomato sauce, mozzarella cheese, pepperoni, sausage, bell peppers, onions, olives",
+    price: 12,
+    photoName: "pizzas/supreme.jpg",
+    soldOut: false
+  },
+  {
+    name: "Vegetarian",
+    ingredients: "Tomato sauce, mozzarella cheese, bell peppers, onions, tomatoes, olives",
+    price: 9,
+    photoName: "pizzas/Vegetarian.webp",
+    soldOut: false
+  },
+  {
+    name: "BBQ Chicken",
+    ingredients: "BBQ sauce, mozzarella cheese, grilled chicken, red onions, cilantro",
+    price: 11,
+    photoName: "pizzas/BBQ Chicken.jpg",
+    soldOut: false
+  }
+]
 
-  const PizzaData = [
-    {
-      name: "Focaccia",
-      ingredients: "Breads with italian olive oil and rosemary",
-      price: 6,
-      photoName: "pizzas/focaccia.jpg",
-      soldOut: false
-    },
-    {
-      name: "Margherita",
-      ingredients: "Tomato sauce, mozzarella cheese, fresh basil",
-      price: 8,
-      photoName: "pizzas/margherita.jpg",
-      soldOut: false
-    },
-    {
-      name: "Pepperoni",
-      ingredients: "Tomato sauce, mozzarella cheese, pepperoni slices",
-      price: 10,
-      photoName: "pizzas/pepperoni.jpg",
-      soldOut: false
-    },
-    {
-      name: "Hawaiian",
-      ingredients: "Tomato sauce, mozzarella cheese, ham, pineapple",
-      price: 9,
-      photoName: "pizzas/hawaiian.jpg",
-      soldOut: false
-    },
-    {
-      name: "Mushroom Delight",
-      ingredients: "Tomato sauce, mozzarella cheese, mushrooms, onions",
-      price: 8,
-      photoName: "pizzas/mushroom-delight.jpg",
-      soldOut: false
-    },
-    {
-      name: "Supreme",
-      ingredients: "Tomato sauce, mozzarella cheese, pepperoni, sausage, bell peppers, onions, olives",
-      price: 12,
-      photoName: "pizzas/supreme.jpg",
-      soldOut: false
-    },
-    {
-      name: "Vegetarian",
-      ingredients: "Tomato sauce, mozzarella cheese, bell peppers, onions, tomatoes, olives",
-      price: 9,
-      photoName: "pizzas/vegetarian.jpg",
-      soldOut: false
-    },
-    {
-      name: "BBQ Chicken",
-      ingredients: "BBQ sauce, mozzarella cheese, grilled chicken, red onions, cilantro",
-      price: 11,
-      photoName: "pizzas/bbq-chicken.jpg",
-      soldOut: false
-    }
-  ]
+
+function App() {
 
   return (
     <div className='container'>
@@ -85,22 +86,24 @@ function Header() {
 }
 
 function Menu() {
+   const pizzas = PizzaData;
+  //const pizzas = [];
+  const numberOfPizzas = pizzas.length;
+
   return (
     <main className='menu'>
       <h2>Our menu</h2>
-      <Pizza
-        name='Pizza Spinaci'
-        ingredients='BBQ sauce, mozzarella cheese, grilled chicken, red onions, cilantro'
-        photoName='pizzas/spinaci.jpg'
-        price={10}
-      />
-
-      <Pizza
-        name='Vegetarian'
-        ingredients='Tomato sauce, mozzarella cheese, bell peppers, onions, tomatoes, olives'
-        photoName='pizzas/spinaci.jpg'
-        price={12}
-      />
+      {numberOfPizzas > 0 ? (
+        <>
+        <p>
+          Authentic italian cuisine. 8 createive dishes to choose from. All from our stone oven, all organic, all delicious.
+        </p>
+        <ul className='pizzas'>
+          {pizzas.map((pizza) => (<Pizza pizzaObj={pizza} />))}
+        </ul>
+        </>
+      ) : <p>We're still working on our menu. Please come back later :)</p>
+      }
 
     </main>
   )
@@ -110,8 +113,8 @@ function Menu() {
 function Footer() {
   const hour = new Date().getHours();
   console.log(hour);
-  const openHour = 12;
-  const closeHour = 20;
+  const openHour = 10;
+  const closeHour =18;
   const isOpen = hour >= openHour && hour <= closeHour;
   console.log(isOpen);
   // if (hour >= openHour && hour <= closeHour) {
@@ -119,21 +122,40 @@ function Footer() {
   // } else {
   //   alert("Sorry we're closed!")
   // }
-  return <footer className='footer'>{new Date().toLocaleTimeString()} We're currently open</footer>
+  return (<footer className='footer'>
+    {isOpen ?
+      (
+         <Order closeHour={closeHour} openHour={openHour}/>
+      ) : ( <p>We're happry to welcome you between {openHour}:00 and {closeHour}:00.</p>
+   )}
+
+  </footer>
+  )
 }
 
 
-function Pizza(props) {
-  console.log(props, 'props');
+function Order(props){
+  const {closeHour,openHour} = props;
+  return(
+    <div className='order'>
+    <p>We're open from {openHour}:00 to {closeHour}:00. Come visit us or order online.</p>
+    <button className='btn'>Order</button>
+  </div>
+  )
+}
+
+function Pizza({pizzaObj}) {
+  // if(pizzaObj.soldOut) return null;
+
   return (
-    <div className='pizza'>
-      <img src={props.photoName} alt={props.name} />
+    <li className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
+      <img src={pizzaObj.photoName} alt={pizzaObj.name} />
       <div>
-        <h3>{props.name}</h3>
-        <p>{props.ingredients}</p>
-        <span>{props.price}</span>
+        <h3>{pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+        <span>{pizzaObj.soldOut ? "SOLD OUT" : pizzaObj.price}</span>
       </div>
-    </div>
+    </li>
   );
 }
 
